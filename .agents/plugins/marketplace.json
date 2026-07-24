@@ -1,0 +1,77 @@
+{
+  "name": "infosec",
+  "interface": {
+    "displayName": "InfoSec Toolkit",
+    "shortDescription": "Curated security skills, tool wrappers and MCP servers for infosec-cli."
+  },
+  "plugins": [
+    {
+      "name": "pentest-recon",
+      "source": { "source": "local", "path": "./plugins/pentest-recon" },
+      "policy": { "installation": "INSTALLED_BY_DEFAULT", "authentication": "ON_USE" },
+      "category": "reconnaissance"
+    },
+    {
+      "name": "pentest-report",
+      "source": { "source": "local", "path": "./plugins/pentest-report" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "reporting"
+    },
+    {
+      "name": "web-nuclei",
+      "source": { "source": "local", "path": "./plugins/web-nuclei" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "web",
+      "requirements": {
+        "tools": [
+          {
+            "command": "docker",
+            "check": "docker info",
+            "hint": "web-nuclei runs the nuclei scanner in a container. Install Docker Desktop (https://docs.docker.com/get-docker/), make sure `docker` is on PATH and the daemon is running, then retry."
+          }
+        ]
+      }
+    },
+    {
+      "name": "darkweb-osint",
+      "source": { "source": "local", "path": "./plugins/darkweb-osint" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "osint",
+      "requirements": {
+        "tools": [
+          {
+            "command": "uv",
+            "install": {
+              "macos": "curl -LsSf https://astral.sh/uv/install.sh | sh",
+              "linux": "curl -LsSf https://astral.sh/uv/install.sh | sh",
+              "windows": "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\""
+            },
+            "hint": "uv provides the `uvx` launcher this plugin's MCP server runs under."
+          },
+          {
+            "command": "tor",
+            "install": {
+              "macos": "brew install tor && brew services start tor",
+              "linux": "sudo apt-get update && sudo apt-get install -y tor && sudo service tor start",
+              "windows": "choco install -y tor"
+            },
+            "probe": "127.0.0.1:9050",
+            "hint": "Needs a local Tor SOCKS proxy on 127.0.0.1:9050. If auto-install fails, install Tor manually and start it (`brew services start tor` / `sudo service tor start`)."
+          }
+        ]
+      }
+    },
+    {
+      "name": "scope-guard",
+      "source": { "source": "local", "path": "./plugins/scope-guard" },
+      "policy": { "installation": "INSTALLED_BY_DEFAULT", "authentication": "ON_USE" },
+      "category": "agent-framework"
+    },
+    {
+      "name": "web-app-testing",
+      "source": { "source": "local", "path": "./plugins/web-app-testing" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_USE" },
+      "category": "web"
+    }
+  ]
+}
