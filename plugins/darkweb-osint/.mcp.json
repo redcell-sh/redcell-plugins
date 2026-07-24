@@ -5,7 +5,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/ModelsLab/infosec-plugins.git#subdirectory=plugins/darkweb-osint",
+        "git+https://github.com/redcell-sh/infosec-plugins.git#subdirectory=plugins/darkweb-osint",
         "darkweb-mcp"
       ]
     }

@@ -1,6 +1,6 @@
 # darkweb-osint
 
-Headless **dark-web OSINT** for [`infosec-cli`](https://github.com/ModelsLab/infosec-cli).
+Headless **dark-web OSINT** for [`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
 It exposes robin's Tor search-and-scrape **engine** to the agent over stdio MCP — the
 Streamlit UI and robin's own LLM layer are dropped; the driving agent (the model) does the
 query refinement, filtering, and reporting itself.
@@ -56,7 +56,7 @@ Control the behavior with the `INFOSEC_PLUGIN_PREREQS` environment variable:
 `.mcp.json` runs the server straight from git via `uvx`:
 
 ```
-uvx --from "git+https://github.com/ModelsLab/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
+uvx --from "git+https://github.com/redcell-sh/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
 ```
 
 `uvx` builds an **isolated, ephemeral Python environment** and pulls the package + its Python

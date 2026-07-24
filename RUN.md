@@ -58,7 +58,7 @@ $BIN "use tor_status to confirm Tor, then darkweb_search leak sites for <authori
 ```
 The MCP server is launched by `.mcp.json` via (works now that this repo is pushed):
 ```
-uvx --from "git+https://github.com/ModelsLab/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
+uvx --from "git+https://github.com/redcell-sh/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
 ```
 > Authorized threat-intel / OSINT use only.
 

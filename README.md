@@ -1,7 +1,7 @@
 # infosec-cli plugins (curated marketplace)
 
 Curated marketplace of security **skills**, **tool wrappers**, and **MCP servers** for
-[`infosec-cli`](https://github.com/ModelsLab/infosec-cli).
+[`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
 
 Every `infosec` CLI auto-syncs this repo on startup (`git ls-remote HEAD` → shallow fetch →
 cached under `~/.infosec/.tmp/plugins`). **Push to the default branch → all CLIs pick it up on

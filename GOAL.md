@@ -1,6 +1,6 @@
 # infosec-plugins — Goal & Plugin Roadmap
 
-The **curated marketplace** for [`infosec-cli`](https://github.com/ModelsLab/infosec-cli).
+The **curated marketplace** for [`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
 Every `infosec` CLI auto-syncs this repo on startup, so **adding a security tool = a PR here, never a change to the CLI codebase.**
 
 > **North star:** keep the CLI binary lean. Ship *no* security tooling compiled in (beyond a thin default profile + bundled skills). All tools/MCP/methodology live here as installable, toggleable content. Adding, updating, or removing a plugin must require **zero Rust changes and no CLI release** — only a push to this repo.
@@ -10,7 +10,7 @@ Every `infosec` CLI auto-syncs this repo on startup, so **adding a security tool
 ## 1. How this repo reaches every CLI (verified against CLI source)
 
 On startup the CLI runs a curated-plugins sync (`codex-rs/core-plugins/src/startup_sync.rs`):
-1. `git ls-remote https://github.com/ModelsLab/infosec-plugins.git HEAD` → resolves the default-branch commit.
+1. `git ls-remote https://github.com/redcell-sh/infosec-plugins.git HEAD` → resolves the default-branch commit.
 2. Shallow-fetches that commit into `~/.infosec/.tmp/plugins/` (sha tracked in `.tmp/plugins.sha`; only re-syncs on change).
 3. **Requires `.agents/plugins/marketplace.json` at the repo root** or the sync is rejected.
 4. Fallbacks: GitHub REST zipball → (dead OpenAI export path, ignored).
@@ -20,7 +20,7 @@ On startup the CLI runs a curated-plugins sync (`codex-rs/core-plugins/src/start
 - `refs/codex/curated-sync` is a *local* ref name inside the CLI — this repo needs **no** special ref/branch, just `main`.
 - **Push to `main` → live on every CLI at next launch.** No CLI rebuild.
 
-> **CLI status:** the sync URL is now repointed to `ModelsLab/infosec-plugins` (`startup_sync.rs:24-26,601`). This ships to users on the next CLI **release build**; until then, users can consume this repo manually with `infosec plugin marketplace add <git-or-path>` (tested working).
+> **CLI status:** the sync URL is now repointed to `redcell-sh/infosec-plugins` (`startup_sync.rs:24-26,601`). This ships to users on the next CLI **release build**; until then, users can consume this repo manually with `infosec plugin marketplace add <git-or-path>` (tested working).
 
 ---
 
@@ -145,7 +145,7 @@ Verified licenses + distribution facts. **Legal rule: MIT/Apache may be lifted +
 
 | Item | Status | Needed for |
 |---|---|---|
-| Sync URL → `ModelsLab/infosec-plugins` (`startup_sync.rs:24-26,601`) | ✅ done (this change) | Auto-appearing plugins on every CLI |
+| Sync URL → `redcell-sh/infosec-plugins` (`startup_sync.rs:24-26,601`) | ✅ done (this change) | Auto-appearing plugins on every CLI |
 | Ship the repointed binary (release build) | ⬜ pending | Users get auto-sync without manual `marketplace add` |
 | Plugin install / toggle / marketplace-add | ✅ works today (tested) | Adding/enabling plugins with no code change |
 | **Category enable/disable feature** (M1–M4) | ⬜ next codebase change | Toggling whole categories on/off; see `infosec-cli/MARKETPLACE-PLAN.md` |
