@@ -1,8 +1,8 @@
 {
-  "name": "infosec",
+  "name": "redcell",
   "interface": {
-    "displayName": "InfoSec Toolkit",
-    "shortDescription": "Curated security skills, tool wrappers and MCP servers for infosec-cli."
+    "displayName": "RedCell Toolkit",
+    "shortDescription": "Curated security skills, tool wrappers and MCP servers for redcell-cli."
   },
   "plugins": [
     {

@@ -1,7 +1,7 @@
-# infosec-plugins — Goal & Plugin Roadmap
+# redcell-plugins — Goal & Plugin Roadmap
 
-The **curated marketplace** for [`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
-Every `infosec` CLI auto-syncs this repo on startup, so **adding a security tool = a PR here, never a change to the CLI codebase.**
+The **curated marketplace** for [`redcell-cli`](https://github.com/redcell-sh/redcell-cli).
+Every `redcell` CLI auto-syncs this repo on startup, so **adding a security tool = a PR here, never a change to the CLI codebase.**
 
 > **North star:** keep the CLI binary lean. Ship *no* security tooling compiled in (beyond a thin default profile + bundled skills). All tools/MCP/methodology live here as installable, toggleable content. Adding, updating, or removing a plugin must require **zero Rust changes and no CLI release** — only a push to this repo.
 
@@ -10,8 +10,8 @@ Every `infosec` CLI auto-syncs this repo on startup, so **adding a security tool
 ## 1. How this repo reaches every CLI (verified against CLI source)
 
 On startup the CLI runs a curated-plugins sync (`codex-rs/core-plugins/src/startup_sync.rs`):
-1. `git ls-remote https://github.com/redcell-sh/infosec-plugins.git HEAD` → resolves the default-branch commit.
-2. Shallow-fetches that commit into `~/.infosec/.tmp/plugins/` (sha tracked in `.tmp/plugins.sha`; only re-syncs on change).
+1. `git ls-remote https://github.com/redcell-sh/redcell-plugins.git HEAD` → resolves the default-branch commit.
+2. Shallow-fetches that commit into `~/.redcell/.tmp/plugins/` (sha tracked in `.tmp/plugins.sha`; only re-syncs on change).
 3. **Requires `.agents/plugins/marketplace.json` at the repo root** or the sync is rejected.
 4. Fallbacks: GitHub REST zipball → (dead OpenAI export path, ignored).
 
@@ -20,7 +20,7 @@ On startup the CLI runs a curated-plugins sync (`codex-rs/core-plugins/src/start
 - `refs/codex/curated-sync` is a *local* ref name inside the CLI — this repo needs **no** special ref/branch, just `main`.
 - **Push to `main` → live on every CLI at next launch.** No CLI rebuild.
 
-> **CLI status:** the sync URL is now repointed to `redcell-sh/infosec-plugins` (`startup_sync.rs:24-26,601`). This ships to users on the next CLI **release build**; until then, users can consume this repo manually with `infosec plugin marketplace add <git-or-path>` (tested working).
+> **CLI status:** the sync URL is now repointed to `redcell-sh/redcell-plugins` (`startup_sync.rs:24-26,601`). This ships to users on the next CLI **release build**; until then, users can consume this repo manually with `redcell plugin marketplace add <git-or-path>` (tested working).
 
 ---
 
@@ -29,7 +29,7 @@ On startup the CLI runs a curated-plugins sync (`codex-rs/core-plugins/src/start
 ```
 .agents/plugins/marketplace.json      # catalog (REQUIRED, repo root, default branch)
 .agents/plugins/api_marketplace.json  # identical copy (api-curated consumer)
-plugins/<name>/.codex-plugin/plugin.json    # per-plugin manifest
+plugins/<name>/.redcell-plugin/plugin.json    # per-plugin manifest
 plugins/<name>/skills/<skill>/SKILL.md      # optional skill pack (pure knowledge)
 plugins/<name>/.mcp.json                     # optional MCP server(s)
 third_party/<name>/LICENSE                    # verbatim upstream license for anything vendored
@@ -38,8 +38,8 @@ third_party/<name>/LICENSE                    # verbatim upstream license for an
 ### marketplace.json (verified shape)
 ```json
 {
-  "name": "infosec",
-  "interface": { "displayName": "InfoSec Toolkit" },
+  "name": "redcell",
+  "interface": { "displayName": "RedCell Toolkit" },
   "plugins": [
     { "name": "recon-nmap",
       "source": { "source": "local", "path": "./plugins/recon-nmap" },
@@ -48,7 +48,7 @@ third_party/<name>/LICENSE                    # verbatim upstream license for an
   ]
 }
 ```
-- `installation`: `INSTALLED_BY_DEFAULT` (auto-installs) · `AVAILABLE` (opt-in via `infosec plugin add`) · `NOT_AVAILABLE`.
+- `installation`: `INSTALLED_BY_DEFAULT` (auto-installs) · `AVAILABLE` (opt-in via `redcell plugin add`) · `NOT_AVAILABLE`.
 - `authentication`: `ON_INSTALL` · `ON_USE`. **There is no `NONE`.**
 - `source`: `{"source":"local","path":"./…"}` · `{"source":"url","url":"owner/repo"}` · `git-subdir` · `npm`. **No `github` variant.**
 - `category` drives the CLI's (upcoming) category enable/disable filter; it is safe to set today (ignored until the feature ships).
@@ -70,7 +70,7 @@ third_party/<name>/LICENSE                    # verbatim upstream license for an
 
 ## 3. Packaging patterns for code-bearing plugins (READ THIS)
 
-**Installing a plugin downloads the whole plugin directory into `~/.infosec/plugins/cache/<mkt>/<plugin>/<version>/` (verified). But the CLI does NOT install dependencies or provide a runtime** — it only runs the MCP server's `command`. There is also **no `${PLUGIN_ROOT}` templating**, and the server's working dir defaults to the session cwd, not the plugin folder.
+**Installing a plugin downloads the whole plugin directory into `~/.redcell/plugins/cache/<mkt>/<plugin>/<version>/` (verified). But the CLI does NOT install dependencies or provide a runtime** — it only runs the MCP server's `command`. There is also **no `${PLUGIN_ROOT}` templating**, and the server's working dir defaults to the session cwd, not the plugin folder.
 
 ⟹ **Never ship a loose `server.py` + `requirements.txt` and expect it to run.** The files arrive, but it crashes on missing deps / wrong cwd. Instead, the code + deps must come from a registry the `command` pulls at launch:
 
@@ -132,11 +132,11 @@ Verified licenses + distribution facts. **Legal rule: MIT/Apache may be lifted +
 
 ## 6. How to add a new plugin (pure content — no codebase change)
 
-1. `mkdir -p plugins/<name>/.codex-plugin` and write `plugin.json` (§2).
+1. `mkdir -p plugins/<name>/.redcell-plugin` and write `plugin.json` (§2).
 2. Add capability: `skills/<skill>/SKILL.md` (knowledge) and/or `.mcp.json` (a docker/uvx/npx/binary launch, §3).
 3. If vendoring MIT/Apache code, drop the upstream `LICENSE` under `third_party/<name>/`.
 4. Register it in `.agents/plugins/marketplace.json` **and** `api_marketplace.json` (name, `source` local path, `policy`, `category`).
-5. Test locally: `infosec plugin marketplace add $(pwd)` → `infosec plugin add <name>@infosec` → confirm install + (for MCP) that the server launches.
+5. Test locally: `redcell plugin marketplace add $(pwd)` → `redcell plugin add <name>@redcell` → confirm install + (for MCP) that the server launches.
 6. Commit + push `main`. Live on all CLIs next launch.
 
 ---
@@ -145,11 +145,11 @@ Verified licenses + distribution facts. **Legal rule: MIT/Apache may be lifted +
 
 | Item | Status | Needed for |
 |---|---|---|
-| Sync URL → `redcell-sh/infosec-plugins` (`startup_sync.rs:24-26,601`) | ✅ done (this change) | Auto-appearing plugins on every CLI |
+| Sync URL → `redcell-sh/redcell-plugins` (`startup_sync.rs:24-26,601`) | ✅ done (this change) | Auto-appearing plugins on every CLI |
 | Ship the repointed binary (release build) | ⬜ pending | Users get auto-sync without manual `marketplace add` |
 | Plugin install / toggle / marketplace-add | ✅ works today (tested) | Adding/enabling plugins with no code change |
-| **Category enable/disable feature** (M1–M4) | ⬜ next codebase change | Toggling whole categories on/off; see `infosec-cli/MARKETPLACE-PLAN.md` |
-| De-brand: `OPENAI_*` consts → `INFOSEC_*`, `~/.codex`→`~/.infosec` | ⬜ M0 | Coherent naming |
+| **Category enable/disable feature** (M1–M4) | ⬜ next codebase change | Toggling whole categories on/off; see `redcell-cli/MARKETPLACE-PLAN.md` |
+| De-brand: `OPENAI_*` consts → `REDCELL_*`, `~/.codex`→`~/.redcell` | ⬜ M0 | Coherent naming |
 
 **Principle:** once the repointed binary ships, plugin content (incl. `category` strings) needs no Rust change. The *only* remaining codebase change is the category-**toggle feature** itself (a thin metadata+filter layer, fully specced in `MARKETPLACE-PLAN.md`). Plugins should carry `category` now so they're ready the day it lands.
 

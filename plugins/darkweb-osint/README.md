@@ -1,6 +1,6 @@
 # darkweb-osint
 
-Headless **dark-web OSINT** for [`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
+Headless **dark-web OSINT** for [`redcell-cli`](https://github.com/redcell-sh/redcell-cli).
 It exposes robin's Tor search-and-scrape **engine** to the agent over stdio MCP — the
 Streamlit UI and robin's own LLM layer are dropped; the driving agent (the model) does the
 query refinement, filtering, and reporting itself.
@@ -27,8 +27,8 @@ exposed as tools — the agent is already a model and should do that reasoning i
 
 ## Prerequisites (installed automatically)
 
-This plugin declares its prerequisites in the marketplace, so **`infosec plugin add
-darkweb-osint@infosec` checks for them and installs the missing ones before the plugin is
+This plugin declares its prerequisites in the marketplace, so **`redcell plugin add
+darkweb-osint@redcell` checks for them and installs the missing ones before the plugin is
 registered.** If a prerequisite is missing and cannot be installed, the install **aborts** and
 the plugin is *not* added — you never end up with a half-working plugin.
 
@@ -37,7 +37,7 @@ the plugin is *not* added — you never end up with a half-working plugin.
 | **`uv`** | Provides the `uvx` launcher the MCP server runs under. | `curl -LsSf https://astral.sh/uv/install.sh \| sh` (macOS/Linux) · `irm https://astral.sh/uv/install.ps1 \| iex` (Windows) — user-space, no sudo. |
 | **`tor`** | A local Tor SOCKS5 proxy on `127.0.0.1:9050` for all requests. | `brew install tor && brew services start tor` (macOS) · `sudo apt-get install -y tor && sudo service tor start` (Linux) · `choco install -y tor` (Windows). |
 
-Control the behavior with the `INFOSEC_PLUGIN_PREREQS` environment variable:
+Control the behavior with the `REDCELL_PLUGIN_PREREQS` environment variable:
 
 | Value | Behavior |
 |---|---|
@@ -56,7 +56,7 @@ Control the behavior with the `INFOSEC_PLUGIN_PREREQS` environment variable:
 `.mcp.json` runs the server straight from git via `uvx`:
 
 ```
-uvx --from "git+https://github.com/redcell-sh/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
+uvx --from "git+https://github.com/redcell-sh/redcell-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
 ```
 
 `uvx` builds an **isolated, ephemeral Python environment** and pulls the package + its Python
@@ -69,8 +69,8 @@ deps on first use — nothing is installed globally, and the plugin ships no ven
 Inside the CLI agent (Tor running):
 
 ```bash
-infosec plugin add darkweb-osint@infosec
-infosec "use tor_status to confirm Tor is up, then darkweb_search for leak sites mentioning <authorized-target> and scrape the top hit"
+redcell plugin add darkweb-osint@redcell
+redcell "use tor_status to confirm Tor is up, then darkweb_search for leak sites mentioning <authorized-target> and scrape the top hit"
 ```
 
 Smoke-test the engine directly (no MCP client needed):
