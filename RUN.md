@@ -1,19 +1,19 @@
-# RUN — infosec-plugins (test, run, add, publish)
+# RUN — redcell-plugins (test, run, add, publish)
 
 Runnable quickstart for the curated marketplace. Full plan: `GOAL.md`.
-Exercised end-to-end against a freshly built `infosec` CLI on macOS.
+Exercised end-to-end against a freshly built `redcell` CLI on macOS.
 
 Set the CLI path once:
 ```bash
-BIN=~/Documents/projects/infosec-cli/codex-rs/target/debug/infosec   # build it first (see CLI RUN.md)
+BIN=~/Documents/projects/redcell-cli/codex-rs/target/debug/redcell   # build it first (see CLI RUN.md)
 ```
 
 ## 1. Test the marketplace against the CLI (no push needed)
 ```bash
-export INFOSEC_HOME=/tmp/inf-test           # throwaway home
+export REDCELL_HOME=/tmp/inf-test           # throwaway home
 $BIN plugin marketplace add "$PWD"          # add THIS repo as a local marketplace
 $BIN plugin list                            # → pentest-recon, pentest-report, web-nuclei, darkweb-osint
-$BIN plugin add pentest-report@infosec      # skill pack — installs instantly
+$BIN plugin add pentest-report@redcell      # skill pack — installs instantly
 ```
 Already pushed to `main`, so the auto-sync path also serves it with no `marketplace add` at all
 (see the CLI `RUN.md` §3A).
@@ -26,14 +26,14 @@ Engine lifted from robin (MIT, see `third_party/robin/LICENSE`); the agent does 
 `darkweb-osint` declares `tor` + `uv` in its marketplace entry (§3, `requirements`). Installing the
 plugin **auto-installs them per-OS and hard-fails if it can't** — you never get a half-working plugin:
 ```bash
-$BIN plugin add darkweb-osint@infosec
-#   ↳ [darkweb-osint@infosec] prerequisite `tor` not found — installing: brew install tor && brew services start tor
+$BIN plugin add darkweb-osint@redcell
+#   ↳ [darkweb-osint@redcell] prerequisite `tor` not found — installing: brew install tor && brew services start tor
 #   ... 🍺 tor 0.4.9.11 ... Successfully started `tor` ...
-#   ↳ [darkweb-osint@infosec] `tor` is now available.
-#   Added plugin `darkweb-osint` from marketplace `infosec`.
+#   ↳ [darkweb-osint@redcell] `tor` is now available.
+#   Added plugin `darkweb-osint` from marketplace `redcell`.
 ```
-- `INFOSEC_PLUGIN_PREREQS=check` → verify only, hard-fail if missing (no install).
-- `INFOSEC_PLUGIN_PREREQS=skip`  → bypass the check.
+- `REDCELL_PLUGIN_PREREQS=check` → verify only, hard-fail if missing (no install).
+- `REDCELL_PLUGIN_PREREQS=skip`  → bypass the check.
 
 The preflight guarantees the `tor` **binary**; the daemon must be **running** on `127.0.0.1:9050`
 (the macOS installer starts it via `brew services`). Confirm:
@@ -53,23 +53,23 @@ uv run --project plugins/darkweb-osint python -c \
 
 ### Run it inside the CLI agent
 ```bash
-$BIN plugin add darkweb-osint@infosec
+$BIN plugin add darkweb-osint@redcell
 $BIN "use tor_status to confirm Tor, then darkweb_search leak sites for <authorized-target> and scrape the top hit"
 ```
 The MCP server is launched by `.mcp.json` via (works now that this repo is pushed):
 ```
-uvx --from "git+https://github.com/redcell-sh/infosec-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
+uvx --from "git+https://github.com/redcell-sh/redcell-plugins.git#subdirectory=plugins/darkweb-osint" darkweb-mcp
 ```
 > Authorized threat-intel / OSINT use only.
 
 ## 3. Add a new plugin (pure content — no CLI rebuild)
 Skill-pack example (this is exactly how `pentest-report` was added):
 ```bash
-mkdir -p plugins/<name>/.codex-plugin plugins/<name>/skills/<skill>
-# plugins/<name>/.codex-plugin/plugin.json   → name, version, "skills":"./skills", interface.category
+mkdir -p plugins/<name>/.redcell-plugin plugins/<name>/skills/<skill>
+# plugins/<name>/.redcell-plugin/plugin.json   → name, version, "skills":"./skills", interface.category
 # plugins/<name>/skills/<skill>/SKILL.md      → frontmatter (name, description, metadata.category) + body
 # register it in BOTH .agents/plugins/marketplace.json and api_marketplace.json (keep them identical)
-$BIN plugin marketplace add "$PWD" && $BIN plugin add <name>@infosec   # test
+$BIN plugin marketplace add "$PWD" && $BIN plugin add <name>@redcell   # test
 ```
 
 ### Declaring system prerequisites (the install-time preflight)
@@ -105,7 +105,7 @@ git add -A
 git commit -m "add <plugin>"
 git push origin main
 ```
-Every `infosec` CLI running the repointed binary auto-syncs `main` on next launch.
+Every `redcell` CLI running the repointed binary auto-syncs `main` on next launch.
 
 ## Status
 - ✅ Marketplace tested against the CLI (add / list / install / enable / disable / remove).

@@ -1,7 +1,7 @@
-# infosec-cli plugins (curated marketplace)
+# redcell-cli plugins (curated marketplace)
 
 Curated marketplace of security **skills**, **tool wrappers**, and **MCP servers** for
-[`infosec-cli`](https://github.com/redcell-sh/infosec-cli).
+[`redcell-cli`](https://github.com/redcell-sh/redcell-cli).
 
 ## Release model: the CLI pins a commit
 
@@ -22,7 +22,7 @@ the pin. To bump it:
 ```
 .agents/plugins/marketplace.json      # catalog (required, at repo root, on default branch)
 .agents/plugins/api_marketplace.json  # same content (consumed by the api-curated path)
-plugins/<name>/.codex-plugin/plugin.json   # per-plugin manifest
+plugins/<name>/.redcell-plugin/plugin.json   # per-plugin manifest
 plugins/<name>/skills/<skill>/SKILL.md     # optional skill pack
 plugins/<name>/.mcp.json                   # optional MCP server(s)
 ```
@@ -36,7 +36,7 @@ plugins/<name>/.mcp.json                   # optional MCP server(s)
 | Wrapped tool | thin MCP server shelling to a host binary | (brutespray, medusa, …) |
 
 ## Rules
-- `installation`: `INSTALLED_BY_DEFAULT` (auto) · `AVAILABLE` (opt-in via `infosec plugin add`) · `NOT_AVAILABLE`.
+- `installation`: `INSTALLED_BY_DEFAULT` (auto) · `AVAILABLE` (opt-in via `redcell plugin add`) · `NOT_AVAILABLE`.
 - `authentication`: `ON_INSTALL` · `ON_USE`. (There is **no** `NONE`.)
 - `category` drives the CLI's category enable/disable filter.
 - Keep **weaponized payloads out of this public repo** — wrap already-installed local binaries only. Route offensive/sensitive content through the authenticated backend catalog.
