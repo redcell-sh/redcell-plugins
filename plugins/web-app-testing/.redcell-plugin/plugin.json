@@ -1,6 +1,6 @@
 {
   "name": "web-app-testing",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Web application security testing methodology: WSTG-aligned test taxonomy, verification discipline, OpSec noise tagging, and reporting handoff (pure knowledge, no runtime deps).",
   "keywords": ["web", "appsec", "owasp", "wstg", "methodology"],
   "skills": "./skills",

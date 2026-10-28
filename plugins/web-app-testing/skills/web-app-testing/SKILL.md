@@ -22,6 +22,12 @@ mechanics.
   default weaknesses — note them.
 - **Model the trust boundaries**: where does user input cross into a parser, a query, a template, a
   file path, a request to another service, or a privilege check? Those crossings are where bugs live.
+- **Trace redirects explicitly**: when a flow's redirect behavior matters (login handoffs, post-action
+  result pages, any "where does this go?" question), inspect the chain with redirects visible —
+  `curl -v` (without `-L`), `Invoke-WebRequest -MaximumRedirection 0`, or raw `HttpWebRequest` with
+  `AllowAutoRedirect = $false` — and report the raw status code plus `Location` header. HTTP clients
+  differ (PowerShell follows redirects by default; curl does not), so an auto-followed landing page
+  is *not* the redirect target.
 
 ## 2. Test taxonomy (WSTG-aligned)
 Work these classes against every relevant input/boundary. For each, the goal is a *confirmed,
@@ -62,6 +68,8 @@ Adopt an **oracle** mindset: a finding is real only when you can trigger the eff
 - Reproduce the observation **more than once**; distinguish a genuine effect from a coincidence, cache
   artifact, or scanner false-positive.
 - Reduce to the **minimal request(s)** that demonstrate it. Capture the exact request/response.
+- When the behavior involves redirects or response headers, re-check with a raw, non-following
+  client — auto-following clients hide the exact status codes and `Location` targets you must report.
 - State the concrete impact (what an attacker gains), not just "input is reflected."
 - If you cannot reproduce it deterministically, mark it *unconfirmed* and keep it out of the findings
   list (or file it as an observation to revisit).
