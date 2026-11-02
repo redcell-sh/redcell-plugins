@@ -1,0 +1,13 @@
+{
+  "name": "offensive-playbooks",
+  "version": "0.2.0",
+  "description": "Transferable offensive-security playbooks for authorized testing and bug bounty, distilled from public community lab writeups: host attack workflow, Windows/AD attack paths, OS privesc, web footholds, pivoting/tunneling, password cracking, database/cloud/container attack paths, mobile, wireless, and source-code auditing.",
+  "keywords": ["methodology", "privilege-escalation", "active-directory", "bug-bounty", "exploitation", "cloud", "containers", "mobile", "wireless", "password-cracking", "code-audit"],
+  "skills": "./skills",
+  "interface": {
+    "displayName": "Offensive Playbooks",
+    "shortDescription": "Writeup-informed attack-path playbooks for authorized testing.",
+    "category": "exploitation",
+    "capabilities": ["read"]
+  }
+}
